@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# TypeScript / Node
+node_modules/
+dist/
+*.tsbuildinfo
+.npm/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# ATF local state (never commit)
+*.atf-keys/
+*.atf-audit.sqlite
+*.atf-audit.duckdb
+
+# Secrets
+.env
+.env.local
+*.pem
+*.key
+!docs/specs/keys.example.pem
