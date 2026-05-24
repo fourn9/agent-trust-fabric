@@ -19,7 +19,7 @@ from atf import (
 @pytest.fixture
 def delegator():
     kp = KeyPair.generate(kid="1")
-    ident = Identity(owner="findy.co.jp", name="coding", keypair=kp)
+    ident = Identity(owner="example.com", name="coding", keypair=kp)
     return ident, kp
 
 
@@ -28,14 +28,14 @@ def test_issue_and_verify(delegator):
     token = issue_token(
         delegator=ident,
         delegator_keypair=kp,
-        delegatee_id="agent://findy.co.jp/image#1",
+        delegatee_id="agent://example.com/image#1",
         scope=["image.generate"],
         purpose="blog illustration",
     )
     claims = verify_token(
         token,
         delegator_public_key=kp.public_key,
-        expected_sub="agent://findy.co.jp/image#1",
+        expected_sub="agent://example.com/image#1",
         required_scope="image.generate",
     )
     assert claims.iss == ident.agent_id
@@ -48,7 +48,7 @@ def test_verify_rejects_wrong_subject(delegator):
     token = issue_token(
         delegator=ident,
         delegator_keypair=kp,
-        delegatee_id="agent://findy.co.jp/image#1",
+        delegatee_id="agent://example.com/image#1",
         scope=["image.generate"],
         purpose="x",
     )
@@ -66,7 +66,7 @@ def test_verify_rejects_insufficient_scope(delegator):
     token = issue_token(
         delegator=ident,
         delegator_keypair=kp,
-        delegatee_id="agent://findy.co.jp/image#1",
+        delegatee_id="agent://example.com/image#1",
         scope=["image.generate"],
         purpose="x",
     )
@@ -74,7 +74,7 @@ def test_verify_rejects_insufficient_scope(delegator):
         verify_token(
             token,
             delegator_public_key=kp.public_key,
-            expected_sub="agent://findy.co.jp/image#1",
+            expected_sub="agent://example.com/image#1",
             required_scope="deploy.prod",
         )
 
@@ -84,7 +84,7 @@ def test_verify_hierarchical_scope_match(delegator):
     token = issue_token(
         delegator=ident,
         delegator_keypair=kp,
-        delegatee_id="agent://findy.co.jp/coding#1",
+        delegatee_id="agent://example.com/coding#1",
         scope=["code.write"],
         purpose="x",
     )
@@ -92,7 +92,7 @@ def test_verify_hierarchical_scope_match(delegator):
     claims = verify_token(
         token,
         delegator_public_key=kp.public_key,
-        expected_sub="agent://findy.co.jp/coding#1",
+        expected_sub="agent://example.com/coding#1",
         required_scope="code.write.python",
     )
     assert claims.scope == ["code.write"]
@@ -103,7 +103,7 @@ def test_verify_rejects_expired(delegator):
     token = issue_token(
         delegator=ident,
         delegator_keypair=kp,
-        delegatee_id="agent://findy.co.jp/image#1",
+        delegatee_id="agent://example.com/image#1",
         scope=["image.generate"],
         purpose="x",
         expires_in=1,
@@ -112,7 +112,7 @@ def test_verify_rejects_expired(delegator):
         verify_token(
             token,
             delegator_public_key=kp.public_key,
-            expected_sub="agent://findy.co.jp/image#1",
+            expected_sub="agent://example.com/image#1",
             required_scope="image.generate",
             now=int(time.time()) + 5,
         )
@@ -124,7 +124,7 @@ def test_verify_rejects_tampered_signature(delegator):
     token = issue_token(
         delegator=ident,
         delegator_keypair=kp,
-        delegatee_id="agent://findy.co.jp/image#1",
+        delegatee_id="agent://example.com/image#1",
         scope=["image.generate"],
         purpose="x",
     )
@@ -132,7 +132,7 @@ def test_verify_rejects_tampered_signature(delegator):
         verify_token(
             token,
             delegator_public_key=other.public_key,
-            expected_sub="agent://findy.co.jp/image#1",
+            expected_sub="agent://example.com/image#1",
             required_scope="image.generate",
         )
 
@@ -147,7 +147,7 @@ def test_verify_rejects_algorithm_confusion(delegator):
     token = issue_token(
         delegator=ident,
         delegator_keypair=kp,
-        delegatee_id="agent://findy.co.jp/image#1",
+        delegatee_id="agent://example.com/image#1",
         scope=["image.generate"],
         purpose="x",
     )
@@ -168,7 +168,7 @@ def test_verify_rejects_algorithm_confusion(delegator):
         verify_token(
             bad_token,
             delegator_public_key=kp.public_key,
-            expected_sub="agent://findy.co.jp/image#1",
+            expected_sub="agent://example.com/image#1",
             required_scope="image.generate",
         )
 
@@ -178,7 +178,7 @@ def test_verify_with_manifest_check_rejects_uncovered_scope(delegator):
     token = issue_token(
         delegator=ident,
         delegator_keypair=kp,
-        delegatee_id="agent://findy.co.jp/image#1",
+        delegatee_id="agent://example.com/image#1",
         scope=["deploy.prod"],
         purpose="x",
     )
@@ -187,7 +187,7 @@ def test_verify_with_manifest_check_rejects_uncovered_scope(delegator):
         verify_token(
             token,
             delegator_public_key=kp.public_key,
-            expected_sub="agent://findy.co.jp/image#1",
+            expected_sub="agent://example.com/image#1",
             required_scope="deploy.prod",
             delegator_manifest_content=fake_manifest,
         )

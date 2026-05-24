@@ -13,7 +13,7 @@ from atf import (
 )
 
 
-def _manifest(agent_id="agent://findy.co.jp/coding#1") -> Manifest:
+def _manifest(agent_id="agent://example.com/coding#1") -> Manifest:
     return Manifest(
         agent_id=agent_id,
         version="0.1.0",
@@ -28,7 +28,7 @@ def test_sign_verify_roundtrip():
     kp = KeyPair.generate()
     env = sign_manifest(_manifest(), kp)
     content = verify_manifest(env, kp.public_key)
-    assert content["agent_id"] == "agent://findy.co.jp/coding#1"
+    assert content["agent_id"] == "agent://example.com/coding#1"
     assert any(c["name"] == "code.read" for c in content["capabilities"])
 
 

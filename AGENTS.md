@@ -17,7 +17,7 @@ a decision.
 
 ## Stop conditions
 
-Stop and ask the human before:
+Stop and ask a human before:
 - Making a git commit or push
 - Adding a dependency to the reference implementation
 - Changing a layer's wire format after v0.1
@@ -29,3 +29,13 @@ Stop and ask the human before:
 - Code follows the language's standard style (Black / Ruff for Python).
 - Tests precede implementation for protocol logic.
 - Every cross-layer change requires updating both `docs/specs/` and `spec/`.
+
+## Build & test
+
+```bash
+cd reference/py
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/pytest            # full suite
+.venv/bin/python -m examples.coding_to_image.run   # end-to-end demo
+```

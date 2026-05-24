@@ -44,6 +44,49 @@ once" is rejected by the design criteria.
 - Not the LLM observability stack (Langfuse / Braintrust / etc. win).
 - Not domain-specific verification (left to domain).
 
+## Relationship to harness engineering
+
+"Agent harness engineering" (Addy Osmani) is about making **one agent good**:
+the scaffolding around a model — system prompt, tools, context management,
+and subagents. It is a *vertical* concern, living entirely inside the
+boundary of a single agent.
+
+ATF is a *horizontal* concern. It is about what happens at the **seam
+between agents** — trust, scoped delegation, outcome verification, and
+audit. The two axes are orthogonal: harness = depth (one agent's internals),
+ATF = breadth (between agents). They are **not the same thing, and not
+unrelated** — they meet at exactly one place: the **trust boundary**.
+
+A harness's `subagents` and `tools` pillars handle delegation *within the
+same trust domain* (one process, one owner, one security boundary). The
+moment a harness wants to reach an agent it does **not** control — a
+different vendor, a different developer, a different security boundary — it
+crosses out of "harness concern" and into "ATF concern." In that sense ATF
+is the **standardized protocol for the cross-domain case of the harness's
+subagent/tool pillars**.
+
+```
+Harness spawns a subagent
+  ├─ same trust domain (fully controlled)        → harness handles it; ATF not needed
+  └─ crosses trust domains (other vendor/owner)   → ATF kicks in
+```
+
+Concretely: today's Claude Code subagents and Agent Teams are same-process,
+same-trust-domain — pure harness, no ATF required. Delegating a deploy to
+*another company's* agent is where the harness runs out and ATF begins.
+
+The two also share design DNA. ATF borrows harness engineering's
+"the bottleneck is verification, not generation" principle (design
+principle #3; L6 Outcome Verification embodies it) and its
+Planner–Worker–Judge structure (the issue → execute → verify loop). The
+scopes differ; the philosophy is the same.
+
+Analogy: harness engineering is *how you grow a capable employee* (skills,
+tools, knowledge, assistants). ATF is *how employees from different
+companies do business safely* (contracts, identity checks, scoped
+authority, audit). Different things — but a capable employee operating
+across company boundaries needs both.
+
 ## Adoption hypothesis
 
 The first 10 users are the same developer running multiple agents and using

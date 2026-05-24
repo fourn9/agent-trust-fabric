@@ -36,24 +36,24 @@ def test_pem_roundtrip():
 
 def test_identity_agent_id_and_jwks():
     kp = KeyPair.generate(kid="1")
-    ident = Identity(owner="findy.co.jp", name="claude", keypair=kp)
-    assert ident.agent_id == "agent://findy.co.jp/claude#1"
+    ident = Identity(owner="example.com", name="claude", keypair=kp)
+    assert ident.agent_id == "agent://example.com/claude#1"
     jwks = ident.jwks()
     assert len(jwks["keys"]) == 1
     assert jwks["keys"][0]["kid"] == "1"
 
 
 def test_parse_agent_uri_ok():
-    o, n, k = parse_agent_uri("agent://findy.co.jp/claude#1")
-    assert (o, n, k) == ("findy.co.jp", "claude", "1")
+    o, n, k = parse_agent_uri("agent://example.com/claude#1")
+    assert (o, n, k) == ("example.com", "claude", "1")
 
 
 @pytest.mark.parametrize(
     "bad",
     [
-        "https://findy.co.jp/claude#1",  # wrong scheme
-        "agent://findy.co.jp/claude",  # no kid
-        "agent://findy.co.jp#1",  # no name
+        "https://example.com/claude#1",  # wrong scheme
+        "agent://example.com/claude",  # no kid
+        "agent://example.com#1",  # no name
     ],
 )
 def test_parse_agent_uri_rejects_malformed(bad: str):

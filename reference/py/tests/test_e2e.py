@@ -65,8 +65,8 @@ def _tmpdirs(tmp_path: Path) -> Iterator[tuple[Path, Path]]:
 async def test_full_delegation_flow(tmp_path: Path):
     with _tmpdirs(tmp_path) as (dir_a, dir_b):
         # 1-2. Bootstrap + publish manifests
-        a = Agent.create(name="coding", owner="findy.co.jp", data_dir=dir_a, kid="1")
-        b = Agent.create(name="image", owner="findy.co.jp", data_dir=dir_b, kid="1")
+        a = Agent.create(name="coding", owner="example.com", data_dir=dir_a, kid="1")
+        b = Agent.create(name="image", owner="example.com", data_dir=dir_b, kid="1")
         a.publish_manifest(["code.write", "image.generate"])
         b.publish_manifest(["image.generate"])
 

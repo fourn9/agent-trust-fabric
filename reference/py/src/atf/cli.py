@@ -42,7 +42,7 @@ def _resolve(agent_id_or_pair: str) -> tuple[str, str]:
         raise click.UsageError(
             "agent identifier must be 'owner.name' or agent:// URI"
         )
-    # Split at the LAST dot so 'findy.co.jp.coding' works (rarely correct, but
+    # Split at the LAST dot so 'example.com.coding' works (rarely correct, but
     # we default to last segment as name; users with multi-dot owners should
     # use the URI form).
     parts = agent_id_or_pair.rsplit(".", 1)

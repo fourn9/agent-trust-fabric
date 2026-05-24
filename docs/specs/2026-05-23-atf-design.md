@@ -4,7 +4,7 @@
 - **Document type**: Design specification (architectural source of truth)
 - **Date**: 2026-05-23
 - **Status**: Draft (pre-implementation)
-- **Authors**: Shinichi Kimura + Claude (collaborative brainstorming)
+- **Authors**: ATF Contributors
 - **Decision criteria**: See [ADR-0001](../../decisions/0001-design-criteria.md)
 
 ---
@@ -113,7 +113,7 @@ from atf import Agent
 # L0: identity bootstrap (Ed25519 keypair, self-signed)
 me = Agent.create(
     name="claude-coding-agent",
-    owner="findy.co.jp",
+    owner="example.com",
 )
 
 # L1: publish capability manifest (A2A Agent Card schema + ATF signature)
@@ -123,14 +123,14 @@ me.publish_manifest(capabilities=[
 
 # L4: issue scoped delegation token (JWS, alg=Ed25519 fixed)
 token = me.delegate(
-    to="agent://findy.co.jp/image-gen#1",
+    to="agent://example.com/image-gen#1",
     scope=["image.generate"],
     constraints={"max_cost_usd": 0.50, "purpose": "blog illustration"},
     expires_in="1h",
 )
 
 # L4 verify + L6 outcome handling on B's side
-verifier = Agent.from_uri("agent://findy.co.jp/claude#1")
+verifier = Agent.from_uri("agent://example.com/claude#1")
 if verifier.verify(token):
     result = do_image_gen(...)
     me.audit.record_outcome(token, result)   # L7 cross-signed event
@@ -256,7 +256,7 @@ Witnesses are v2.
 
 ```http
 POST /atf/v1/invoke HTTP/1.1
-Host: image-gen.findy.co.jp
+Host: image-gen.example.com
 Content-Type: application/atf+json; version=0.1
 X-ATF-Token: eyJhbGciOiJFZERTQSIsImtpZCI6...
 
@@ -267,7 +267,7 @@ X-ATF-Token: eyJhbGciOiJFZERTQSIsImtpZCI6...
     "action": "image.generate",
     "params": {"prompt": "...", "size": "1024x1024"}
   },
-  "audit_uri": "https://findy.co.jp/atf/audit/claude/"
+  "audit_uri": "https://example.com/atf/audit/claude/"
 }
 ```
 
@@ -297,11 +297,11 @@ Response:
   "ts": "2026-05-23T12:34:56Z",
   "type": "delegation.completed",
   "delegator": {
-    "agent_id": "agent://findy.co.jp/claude#1",
+    "agent_id": "agent://example.com/claude#1",
     "signature": "ed25519:A_SIG..."
   },
   "delegatee": {
-    "agent_id": "agent://findy.co.jp/image-gen#1",
+    "agent_id": "agent://example.com/image-gen#1",
     "signature": "ed25519:B_SIG..."
   },
   "token_jti": "tkn_01HXY3...",
@@ -385,7 +385,7 @@ dissenter's local log:
 {
   "type": "delegation.disputed",
   "ref_event_id": "evt_01HXY4...",
-  "disputed_by": "agent://findy.co.jp/claude#1",
+  "disputed_by": "agent://example.com/claude#1",
   "reason": "outcome.schema_mismatch",
   "evidence_hash": "sha256:...",
   "signature": "ed25519:..."

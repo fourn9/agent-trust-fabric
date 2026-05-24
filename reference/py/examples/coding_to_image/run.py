@@ -57,8 +57,8 @@ async def main() -> int:
 
         # --- Setup ---
         step(1, "Bootstrap identities (Ed25519 keypairs, well-known URIs)")
-        a = Agent.create(name="coding", owner="findy.co.jp", data_dir=dir_a, kid="1")
-        b = Agent.create(name="image", owner="findy.co.jp", data_dir=dir_b, kid="1")
+        a = Agent.create(name="coding", owner="example.com", data_dir=dir_a, kid="1")
+        b = Agent.create(name="image", owner="example.com", data_dir=dir_b, kid="1")
         info(f"A = {a.agent_id}")
         info(f"B = {b.agent_id}")
         ok("identities created")

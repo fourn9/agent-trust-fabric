@@ -66,13 +66,13 @@ The demo runs the full 11-step delegation flow:
 ## CLI
 
 ```bash
-.venv/bin/atf init findy.co.jp.coding              # bootstrap identity
-.venv/bin/atf publish findy.co.jp.coding --cap code.write
-.venv/bin/atf delegate findy.co.jp.coding \
-    --to "agent://findy.co.jp/image#1" \
+.venv/bin/atf init example.com.coding              # bootstrap identity
+.venv/bin/atf publish example.com.coding --cap code.write
+.venv/bin/atf delegate example.com.coding \
+    --to "agent://example.com/image#1" \
     --scope image.generate \
     --purpose "blog illustration"
-.venv/bin/atf audit ls findy.co.jp.coding
+.venv/bin/atf audit ls example.com.coding
 .venv/bin/atf decode <token>                       # inspect a JWS without verifying
 ```
 

@@ -20,7 +20,7 @@ def test_outcome_roundtrip():
         payload={"image_url": "https://example.com/x.png"},
         schema_id="image.generate.v1",
     )
-    env = sign_outcome(o, kp, signed_by="agent://findy.co.jp/image#1")
+    env = sign_outcome(o, kp, signed_by="agent://example.com/image#1")
     content = verify_outcome(env, kp.public_key, expected_schema_id="image.generate.v1")
     assert content["status"] == "ok"
     assert content["payload"]["image_url"].startswith("https://")
